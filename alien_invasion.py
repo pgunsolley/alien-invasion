@@ -3,6 +3,7 @@ import os
 import pygame
 from src.constants import *
 from src.rocket import Rocket
+from src.functions import *
 
 
 def run_game():
@@ -15,20 +16,16 @@ def run_game():
     rocket = Rocket(screen)
 
     # Start the main loop.
+    # Todo: Refactor this into the Game class and Eventer class (event loop).
     while True:
-        # Watch for keyboard events.
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
+        # Check event loop
+        check_events(rocket)
 
-        # Fill the background color.
-        screen.blit(bg_image, (0, 0))
+        # Update objects that are on the screen
+        rocket.update()
 
-        # Render the rocket.
-        rocket.blitme()
-
-        # Make the most recently drawn screen visible.
-        pygame.display.flip()
+        # Re render the screen and everything registered on the screen.
+        update_screen(screen, bg_image, rocket)
 
 
 run_game()

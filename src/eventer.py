@@ -4,7 +4,7 @@ class Eventer:
     """
     Manager events within the event loop.
 
-    Observers must be passed functions.
+    Event Handlers must be passed functions.
 
     self.events:    Holds the current events
     self.observers: Holds registered observer functions.
@@ -15,10 +15,10 @@ class Eventer:
     def __init__(self):
         """Initialize the Eventer instance."""
         self.events = []
-        self.observers = {}
+        self.handlers = {}
         self.emitters = []
 
-    def register_event_emitter(self, emitter):
+    def register_emitter(self, emitter):
         """
         Register an event emitter.
 
@@ -34,17 +34,17 @@ class Eventer:
         for emitter in self.emitters:
             self.events = emitter.get()
 
-    def on(self, event, observer):
+    def on(self, event, handler):
         """
-        Register an observer function.
+        Register a handler function.
 
         Todo: Find a way to check if an event is a valid event name.
         """
 
-        self.observers[event] = observer
+        self.handlers[event] = handler
 
     def check_observers(self):
         """Check the observers against the registered events."""
-        for event, observer in self.observers.items():
+        for event, handler in self.handlers.items():
             if event in self.events:
-                observer()
+                handler()
