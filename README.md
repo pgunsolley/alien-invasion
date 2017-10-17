@@ -6,3 +6,5 @@ This was originally based on the tutorial in
 however I have deviated far from that example.
 This project is now the foundation of both my Python learning quest,
 and my Pygame framework that should simplify the creation of 2D games in Python.
+
+I am currently in process of abstracting the game-specific elements away from the framework.

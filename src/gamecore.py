@@ -1,7 +1,4 @@
 import pygame
-from src.constants import *
-from src.player import Player
-from src.rocket import Rocket
 import abc
 
 
@@ -117,7 +114,7 @@ class Game:
 
         :return:
         """
-        if renderable is Renderable:
+        if renderable == Renderable:
             self._renderables.append(renderable)
             return
         raise TypeError("Argument must be an instance of gamecore.Renderable.")
@@ -175,6 +172,41 @@ class Renderable(abc.ABC):
     def draw(self):
         """
         Called by event loop to draw the object to the screen.
+
+        :return:
+        """
+        pass
+
+
+class Player(Renderable):
+    """
+    Represents the player.
+
+    This object is a container that wraps a sprite.
+
+    Pass an instantiated sprite object on initialization.
+    """
+    def __init__(self, sprite):
+        super(Player, self).__init__()
+        """
+        Pass in a sprite instance.
+
+        :param sprite:
+        """
+        self.sprite = sprite
+        # Set up the player position.
+
+    def update(self):
+        """
+        Update the self.sprite state.
+
+        :return:
+        """
+        pass
+
+    def draw(self):
+        """
+        Call blitme on the sprite.
 
         :return:
         """
