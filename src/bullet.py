@@ -5,12 +5,12 @@ from src.constants import *
 class Bullet(pygame.sprite.Sprite):
     """
     A PyGame Sprite subclass that represents bullet projectiles.
-
-
     """
 
     def __init__(self, weapon, color=(247, 73, 73), dimensions=(3, 15), speed=3):
-        """Initialize the bullet."""
+        """
+        Initialize the bullet.
+        """
         super(Bullet, self).__init__()
 
         # Store the screen.
@@ -31,7 +31,9 @@ class Bullet(pygame.sprite.Sprite):
         self.speed = speed
 
     def update(self):
-        """Update the bullet."""
+        """
+        Update the bullet state.
+        """
 
         # Update the decimal position.
         self.y -= self.speed
@@ -40,5 +42,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y = self.y
 
     def draw(self):
-        """Draw the bullet to the screen."""
+        """
+        Draw the bullet to the screen.
+        """
         pygame.draw.rect(self.screen, self.color, self.rect)
