@@ -1,14 +1,16 @@
 from src.constants import *
 from pygame.sprite import Group
+from src.gamecore import Renderable
 
 
-class Fleet:
+class Fleet(Renderable):
     """
     A fleet of a sprites.
 
     Pass a reference to a class object of the sprite.
     """
     def __init__(self, sprite_class, screen):
+        super(Fleet, self).__init__()
         """
         Instantiate the Fleet.
 

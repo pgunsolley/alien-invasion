@@ -5,17 +5,13 @@ from src.rocket import Rocket
 import abc
 
 
-class _MainLoop:
+class Game:
     """
-    The main event/game loop.
-
-    Only instantiate inside of a gamecore.Game instance.
-
-    :return:
+    The main class for the GameCore framework.
     """
-    def __init__(self):
+    def __init__(self, screen_size=(1280, 900)):
         """
-        Initialize the MainLoop
+        Instantiate everything the game needs.
         """
         # The player object.
         self._player = None
@@ -27,67 +23,11 @@ class _MainLoop:
         self._renderables = []
 
         # Event manager.
-        self.event_manager = _EventManager()
+        self._event_manager = _EventManager()
 
-    def set_player(self, player):
-        """
-        Set the player.
-
-        The game should instantiate the Player instance and pass it as arg.
-
-        :param player:
-        :return:
-        """
-        self._player = player
-
-    def stop(self):
-        """
-        Stop the loop.
-        (stops the game)
-
-        :return:
-        """
-        self._running = False
-
-    def start(self):
-        """
-        Run the loop.
-
-        :return:
-        """
-        if not self._running:
-            self._running = True
-            while self._running:
-                self.event_manager.call(self._player)
-                self.
-                pass
-
-    def add_renderable(self, renderable):
-        """
-        Add an instantiated Renderable to the renderables list.
-
-        :return:
-        """
-        self._renderables.append(renderable)
-
-
-class Game:
-    """
-    The main class for the GameCore framework.
-    """
-    def __init__(self, screen_size=(1280, 900)):
-        """
-        Instantiate everything the game needs.
-        """
         # Screen.
         # This will be referenced to by every Sprite in the game.
         self._screen = pygame.display.set_mode(screen_size)
-
-        # Game loop
-        self._loop = _MainLoop()
-
-        # Declare a player member
-        self._player_set = False
 
         self._background_image_set = False
 
@@ -108,8 +48,8 @@ class Game:
 
         :return:
         """
-        if self._player_set is False:
-            self._loop.set_player(Player(sprite(self._screen)))
+        if self._player is None:
+            self.set_player(Player(sprite(self._screen)))
             return
         print("Player is already set; co-op is not yet supported.")
 
@@ -136,7 +76,7 @@ class Game:
         :param key:
         :return self:
         """
-        self._loop.event_manager.connect(event_type, key, handler, **kwargs)
+        self._event_manager.connect(event_type, key, handler, **kwargs)
         return self
 
     def render(self, renderable):
@@ -147,25 +87,40 @@ class Game:
         :return:
         """
 
-        # TODO: Add a ABC for renderable objects.
-        self._loop.add_renderable(renderable(self._screen))
-
-    def start(self):
-        """
-        Start the game loop.
-
-        Make sure all configurations and observers are set before calling this :)
-
-        :return:
-        """
-        self._loop.start()
+        self.add_renderable(renderable(self._screen))
 
     def stop(self):
         """
-        Stop the game loop.
+        Stop the loop.
+        (stops the game)
+
         :return:
         """
-        self._loop.stop()
+        self._running = False
+
+    def start(self):
+        """
+        Run the loop.
+
+        :return:
+        """
+        if not self._running:
+            self._running = True
+            while self._running:
+                self._event_manager.call(self._player)
+                # Todo: Call draw on all renderables.
+                pass
+
+    def add_renderable(self, renderable):
+        """
+        Add an instantiated Renderable to the renderables list.
+
+        :return:
+        """
+        if renderable is Renderable:
+            self._renderables.append(renderable)
+            return
+        raise TypeError("Argument must be an instance of gamecore.Renderable.")
 
 
 class _EventManager:
@@ -174,7 +129,7 @@ class _EventManager:
     """
     def __init__(self):
         """
-        Initialize Eventer.
+        Initialize gamecore._EventManager.
         """
         # Event handlers should be registered as event[type][key] = handler_func
         # Ship with pygame.quit :)
@@ -210,11 +165,17 @@ class _EventManager:
 
 class Renderable(abc.ABC):
     """
+    Abstract Renderable
     Represents a custom sprite-like object that can be blit to the pygame screen.
     """
     def __init__(self):
         pass
 
     @abc.abstractmethod
-    def update(self):
+    def draw(self):
+        """
+        Called by event loop to draw the object to the screen.
+
+        :return:
+        """
         pass
